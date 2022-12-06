@@ -1,4 +1,3 @@
-
 import unittest
 import sqlite3
 import json
@@ -14,23 +13,20 @@ def setUpDatabase(db_name):
     cur = conn.cursor()
     return cur, conn
 
-def create_employee_table(cur, conn):
-    cur.execute('')
+def create_co2_table(cur, conn):
+    cur.execute("DROP TABLE IF EXISTS CO2_Emissions")
+    cur.execute('CREATE TABLE IF NOT EXISTS CO2_Emissions (country TEXT, year INTEGER, total_cases INTEGER)')
     conn.commit()
 
-def getLink(soup):
-    olympics = soup.find('a', title='List of American universities with Olympic medals')
-    url = 'https://en.wikipedia.org' + olympics.get('href')
-    return url
-
 # Change 
-def getAdmissionsInfo2019(soup):
+def getEmissionsData(soup):
     d = {}
-    table = soup.find('table', class_='toccolours')
+    div = soup.find('div', class_='wp-block-column')
+    table = soup.find()
     for row in table.find_all('tr'):
         line = row.find_all('td')
-        if line[0].text != 'College/school':
-            d[line[0].text.replace('\\n', '').strip()] = line[1].text.replace('\\n', '').strip()
+        print(line)
+        d[line[0].text.replace('\\n', '').strip()] = line[1].text.replace('\\n', '').strip()
     return d
 
 
@@ -41,12 +37,12 @@ def main():
     # SETUP DATABASE AND TABLE
     cur, conn = setUpDatabase('api_data.db')
 
-    url = 'https://en.wikipedia.org/wiki/University_of_Michigan'
+    url = 'https://ourworldindata.org/co2-emissions'
     r = requests.get(url)
     soup = BeautifulSoup(r.text, 'html.parser')
 
     #Call the functions getLink(soup) and getAdmissionsInfo2019(soup) on your soup object.
-    getLink(soup)
+    getEmissionsData(soup)
 
 
 if __name__ == "__main__":
