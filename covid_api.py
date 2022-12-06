@@ -13,11 +13,11 @@ def setUpDatabase(db_name):
     cur = conn.cursor()
     return cur, conn
 
-def create_covid_tables(cur, conn):
-    cur.execute("DROP TABLE IF EXISTS Covid_Total_Cases")
-    cur.execute("DROP TABLE IF EXISTS Covid_New_Cases")
-    cur.execute('CREATE TABLE IF NOT EXISTS Covid_Total_Cases (country TEXT, date DATE, total_cases INTEGER)')
-    cur.execute('CREATE TABLE IF NOT EXISTS Covid_New_Cases (country TEXT, date DATE, new_cases INTEGER)')
+def create_tables(cur, conn):
+    cur.execute("DROP TABLE IF EXISTS Covid_Cases")
+    cur.execute("DROP TABLE IF EXISTS Country_IDs")
+    cur.execute('CREATE TABLE IF NOT EXISTS Country_IDs (country_id INTEGER PRIMARY KEY, country TEXT)')
+    cur.execute('CREATE TABLE IF NOT EXISTS Covid_Cases (country_id INTEGER, total_cases_2020 INTEGER, total_cases_2021 INTEGER)')
     conn.commit()
 
 def open_api(c):
@@ -28,29 +28,28 @@ def open_api(c):
     data = json.loads(response)
     return data
 
-def add_cases_total(data, cur, conn):
+def add_country(data, id, cur, conn):
     for item in data:
         country = item['country']
-        # not sure about the date
-        for i in item['cases']:
-            # if i contains 2020 and 2021
-            date = i
-            total_cases = item['cases'][i]['total']
-            cur.execute('INSERT  OR IGNORE INTO Covid_Total_Cases (country, date, total_cases) VALUES (?,?,?)', (country, date, total_cases))
-        cur.execute('INSERT  OR IGNORE INTO Covid_Total_Cases (country, date, total_cases) VALUES (?,?,?)', (country, date, total_cases))
+        country_id = id
+        cur.execute('INSERT OR IGNORE INTO Country_IDs (country_id, country) VALUES (?,?)', (country_id, country))
     conn.commit()
 
-
-def add_cases_new(data, cur, conn):
+def add_cases_total(data, id, cur, conn):
+    total_cases_2020 = 0
+    total_cases_2021 = 0
     for item in data:
-        country = item['country']
+        country_id = id
         for i in item['cases']:
-            # if i contains 2020 and 2021 change it to just the year if not continue
-            date = i
-            new_cases = item['cases'][i]['new']
-            cur.execute('INSERT INTO Covid_New_Cases (country, date, new_cases) VALUES (?,?,?)', (country, date, new_cases))
-        cur.execute('INSERT INTO Covid_New_Cases (country, date, new_cases) VALUES (?,?,?)', (country, date, new_cases))
+            if '2020-02-01' in i:
+                total_cases_2020 = total_cases_2020 + item['cases'][i]['total']
+            elif '2021-02-01' in i:
+                total_cases_2021 = total_cases_2021 + item['cases'][i]['total']
+            else:
+                continue
+    cur.execute('INSERT OR IGNORE INTO Covid_Cases (country_id, total_cases_2020, total_cases_2021) VALUES (?,?,?)', (country_id, total_cases_2020, total_cases_2021))
     conn.commit()
+
 
 class TestCovidApi(unittest.TestCase):
     pass
@@ -58,13 +57,15 @@ class TestCovidApi(unittest.TestCase):
 def main():
     # SETUP DATABASE AND TABLE
     cur, conn = setUpDatabase('api_data.db')
-    country_lst = ['afghanistan', 'argentina', 'australia', 'belgium', 'brazil']
-    create_covid_tables(cur, conn)
+    country_lst = ['china']
+    create_tables(cur, conn)
+    id = 0
 
     for c in country_lst:
         data = open_api(c)
-        add_cases_total(data, cur, conn)
-        add_cases_new(data, cur, conn)
+        add_cases_total(data, id, cur, conn)
+        add_country(data, id, cur, conn)
+        id = id + 1
 
 if __name__ == "__main__":
     main()
