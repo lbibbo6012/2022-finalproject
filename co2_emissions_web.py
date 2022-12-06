@@ -5,7 +5,6 @@ import os
 import matplotlib.pyplot as plt
 import requests
 from bs4 import BeautifulSoup
-from selenium import webdriver
 
 
 # Create Database
