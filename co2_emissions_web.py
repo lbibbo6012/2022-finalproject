@@ -15,12 +15,11 @@ def setUpDatabase(db_name):
     return cur, conn
 
 def create_co2_table(cur, conn):
-    cur.execute("DROP TABLE IF EXISTS CO2_Emissions")
-    cur.execute('CREATE TABLE IF NOT EXISTS CO2_Emissions (country TEXT, emissions_2020 NUMBER, emissions_2021 NUMBER)')
+    cur.execute('CREATE TABLE IF NOT EXISTS CO2_Emissions (country_id INTEGER, emissions_2020 NUMBER, emissions_2021 NUMBER)')
     conn.commit()
 
 # Change 
-def addEmissionsData(countries_lst, soup, cur, conn):
+def addEmissionsData(countries_lst, id, soup, cur, conn):
     table = soup.find('table', class_='ecl-table ecl-table--zebra')
     rows = table.find_all('tr', class_='ecl-table__row')
     for row in rows:
@@ -29,12 +28,11 @@ def addEmissionsData(countries_lst, soup, cur, conn):
 
         if len(row_ind) > 0:
             country = row_ind[0].lower()
-            # ask about hardcoding
 
             if country in countries_lst:
                 emissions_2020 = row_ind[6]
                 emissions_2021 = row_ind[7]
-                cur.execute('INSERT INTO CO2_Emissions (country, emissions_2020, emissions_2021) VALUES (?,?,?)', (country, emissions_2020, emissions_2021))
+                cur.execute('INSERT INTO CO2_Emissions (country_id, emissions_2020, emissions_2021) VALUES (?,?,?)', (id, emissions_2020, emissions_2021))
                 conn.commit()
 
 class TestCO2Emissions(unittest.TestCase):
@@ -49,7 +47,6 @@ def main():
     r = requests.get(url)
     soup = BeautifulSoup(r.text, 'html.parser')
 
-    #Call the functions getLink(soup) and getAdmissionsInfo2019(soup) on your soup object.
     countries_lst = [
     'china', 'united states', 'india', 'russia', 'iran', 'germany', 'south korea', 'indonesia', 'saudi arabia', 'canada',
     'brazil', 'south africa', 'mexico', 'australia', 'united kingdom', 'vietnam', 'poland', 'taiwan', 'thailand', 'egypt',
@@ -58,8 +55,20 @@ def main():
     'turkmenistan', 'romania', 'colombia', 'morocco', 'austria', 'libya', 'north korea', 'belarus', 'singapore', 'peru'
     ]
 
-    addEmissionsData(countries_lst, soup, cur, conn)
+    countries_lst.sort()
+    
+    cur.execute('SELECT max(country_id) FROM CO2_Emissions')
+    min = cur.fetchone()[0]
+    if type(min) != int:
+        min = 0
+    id = min + 1
 
+    for i in range(min, min + 10):
+        addEmissionsData(countries_lst[i], id, soup, cur, conn)
+        id = id + 1
+
+    conn.close()
+    
 
 if __name__ == "__main__":
     main()
