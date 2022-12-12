@@ -71,8 +71,8 @@ def main():
     cur.execute('SELECT max(country_id) FROM Covid_Cases')
     min = cur.fetchone()[0]
     if type(min) != int:
-        min = 1
-    id = min
+        min = 0
+    id = min + 1
 
     for i in range(min, min + 10):
         data = open_api(countries_lst[i])
@@ -85,6 +85,8 @@ def main():
 if __name__ == "__main__":
     main()
     unittest.main(verbosity=2)
+
+
 
 
 
