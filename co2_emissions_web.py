@@ -47,12 +47,16 @@ def main():
     r = requests.get(url)
     soup = BeautifulSoup(r.text, 'html.parser')
 
-    countries_lst = [
-    'china', 'united states', 'india', 'russia', 'iran', 'germany', 'south korea', 'indonesia', 'saudi arabia', 'canada',
-    'brazil', 'south africa', 'mexico', 'australia', 'united kingdom', 'vietnam', 'poland', 'taiwan', 'thailand', 'egypt',
+    countries_lst = ['china','united states', 'india', 'russia', 'iran', 'germany', 'indonesia', 'saudi arabia', 'canada',
+    'brazil', 'south africa', 'mexico', 'australia', 'united kingdom', 'vietnam', 'poland', 'thailand', 'egypt',
     'malaysia', 'pakistan', 'kazakhstan', 'united arab emirates', 'argentina', 'ukraine', 'iraq', 'algeria', 'philippines', 'netherlands',
-    'nigeria', 'uzbekistan', 'bangladesh', 'venezuela', 'kuwait', 'czechia', 'qatar', 'belgium', 'oman', 'chile', 
-    'turkmenistan', 'romania', 'colombia', 'morocco', 'austria', 'libya', 'north korea', 'belarus', 'singapore', 'peru'
+    'nigeria', 'uzbekistan', 'bangladesh', 'venezuela', 'kuwait', 'czechia', 'qatar', 'belgium', 'oman', 'chile', 'romania', 'colombia', 
+    'morocco', 'austria', 'libya', 'belarus', 'singapore', 'peru', 'greece', 'hungary', 'bulgaria', 'norway', 'ecuador', 'finland', 'sweden', 
+    'portugal', 'bahrain', 'slovakia', 'azerbaijan', 'ireland', 'new zealand', 'tunisia', 'dominican republic', 'denmark', 'syria', 'lebanon', 
+    'mongolia', 'cuba', 'angola', 'jordan', 'sri lanka', 'ghana', 'bolivia', 'kenya', 'laos', 'guatemala', 'ethiopia', 'croatia', 'cambodia',
+    'estonia', 'nepal', 'lithuania', 'tanzania', 'panama', 'zimbabwe', 'yemen', 'senegal', 'georgia', 'cameroon', 
+    'tajikistan', 'honduras', 'moldova', 'paraguay', 'mozambique', 'benin', 'luxembourg', 'afganistan', 'el salvador', 'costa rica', 'jamaica',
+    'congo', 'brunei', 'latvia', 'zambia', 'botswana', 'uganda', 'uruguay', 'armenia'
     ]
 
     countries_lst.sort()
@@ -73,3 +77,5 @@ def main():
 if __name__ == "__main__":
     main()
     unittest.main(verbosity=2)
+
+
