@@ -7,6 +7,7 @@ import requests
 import plotly.graph_objects as go
 import plotly.express as px
 import pandas as pd
+import csv
 # starter code
 
 def setUpDatabase(db_name):
@@ -144,11 +145,31 @@ def main():
     cases_p_data = cases_calc(cur,conn)
     pie_chart(cases_p_data, 'Total Covid Cases Change (as a percent of total change) by Country Feb 2020 - Feb 2021')
 
+    small_lst = []
+    all_lst = []
 
-    with open('calculations.txt', 'w') as convert_file:
-     convert_file.write(json.dumps(co2_covid_data))
+    for i in co2_covid_data:
+        small_lst.append(i)
+        small_lst.append(co2_covid_data[i]['cases_difference'])
+        small_lst.append(co2_covid_data[i]['emissions_difference'])
+        all_lst.append(small_lst)
+
+        
+    column_names = ['country', 'cases_difference', 'emissions_difference']
+
+    with open('calculations.csv', 'w') as csvfile:
+        write = csv.writer(csvfile)
+        write.writerow(column_names)
+
+        for i in co2_covid_data:
+            small_lst = []
+            small_lst.append(i)
+            small_lst.append(co2_covid_data[i]['cases_difference'])
+            small_lst.append(co2_covid_data[i]['emissions_difference'])
+            write.writerow(small_lst)
 
     conn.close()
+
 if __name__ == "__main__":
     main()
     unittest.main(verbosity=2)
