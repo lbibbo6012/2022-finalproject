@@ -58,11 +58,16 @@ def main():
     cur, conn = setUpDatabase('api_data.db')
     create_tables(cur, conn)
 
-    countries_lst = ['china','united states', 'india', 'russia', 'iran', 'germany', 'indonesia', 'saudi arabia', 'canada',
-    'brazil', 'south africa', 'mexico', 'australia', 'united kingdom', 'vietnam', 'poland', 'thailand', 'egypt',
-    'malaysia', 'pakistan', 'kazakhstan', 'united arab emirates', 'argentina', 'ukraine', 'iraq', 'algeria', 'philippines', 'netherlands',
-    'nigeria', 'uzbekistan', 'bangladesh', 'venezuela', 'kuwait', 'czechia', 'qatar', 'belgium', 'oman', 'chile', 'romania', 'colombia', 
-    'morocco', 'austria', 'libya', 'belarus', 'singapore', 'peru', 'greece', 'hungary', 'bulgaria', 'norway'
+    countries_lst = ['china','united states', 'india', 'russia', 'iran', 'germany', 'indonesia', 'saudi arabia', 'canada', 'brazil', 
+    'south africa', 'mexico', 'australia', 'united kingdom', 'vietnam', 'poland', 'thailand', 'egypt', 'malaysia', 'pakistan', 
+    'kazakhstan', 'united arab emirates', 'argentina', 'ukraine', 'iraq', 'algeria', 'philippines', 'netherlands','nigeria', 'uzbekistan', 
+    'bangladesh', 'venezuela', 'kuwait', 'czechia', 'qatar', 'belgium', 'oman', 'chile', 'romania', 'colombia', 
+    'morocco', 'austria', 'libya', 'belarus', 'singapore', 'peru', 'greece', 'hungary', 'bulgaria', 'norway', 
+    'ecuador', 'finland', 'sweden', 'portugal', 'bahrain', 'slovakia', 'azerbaijan', 'ireland', 'new zealand', 'tunisia', 
+    'dominican republic', 'denmark', 'syria', 'lebanon', 'mongolia', 'cuba', 'angola', 'jordan', 'sri lanka', 'ghana', 
+    'bolivia', 'kenya', 'laos', 'guatemala', 'ethiopia', 'croatia', 'cambodia', 'estonia', 'nepal', 'lithuania',
+    'tanzania', 'panama', 'zimbabwe', 'yemen', 'senegal', 'georgia', 'cameroon', 'tajikistan', 'honduras', 'paraguay', 
+    'jamaica','madagascar','nicaragua', 'haiti', 'iceland', 'liberia', 'eritrea','somalia', 'rwanda', 'samoa'
     ]
 
 
@@ -85,9 +90,5 @@ def main():
 if __name__ == "__main__":
     main()
     unittest.main(verbosity=2)
-
-
-
-
 
 
